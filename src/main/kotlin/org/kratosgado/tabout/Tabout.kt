@@ -12,17 +12,18 @@ import org.apache.commons.lang3.mutable.MutableInt
 
 class Tabout: AnAction() {
     override fun actionPerformed(e: AnActionEvent) {
-        println("Tab triggered")
+//        println("Tab triggered")
         val editor = e.getData(CommonDataKeys.EDITOR)
         if (editor != null ) {
             val isPopupOpened = LookupManager.getActiveLookup(editor) != null;
+
             val caret = editor.caretModel.currentCaret
             val document = editor.document
             val offset = MutableInt(caret.offset)
 
             when {
                 isPopupOpened -> {
-                    println("completion popup is opened")
+//                    println("completion popup is opened")
                     val actionHandler =
                         EditorActionManager.getInstance()
                             .getActionHandler(IdeActions.ACTION_EDITOR_TAB)
@@ -31,15 +32,15 @@ class Tabout: AnAction() {
                     }
                 }
                  e.inputEvent.isShiftDown && shouldTabIn(document, offset)-> {
-                    println("Tabin")
+//                    println("Tabin")
                     caret.moveToOffset(offset.value)
                 }
                 offset.value < document.textLength && shouldTabout(document, offset) -> {
-                    println("Tabout")
+//                    println("Tabout")
                     caret.moveToOffset(offset.value)
                 }
                 else -> {
-                    println("Passing on")
+//                    println("Passing on")
                     val actionHandler =
                         EditorActionManager.getInstance()
                             .getActionHandler(IdeActions.ACTION_EDITOR_TAB)
@@ -63,7 +64,6 @@ class Tabout: AnAction() {
     private  fun shouldTabIn(document: Document, offset: MutableInt): Boolean {
         val startOffset = document.getLineStartOffset(document.getLineNumber(offset.value))
         val targets = charArrayOf(')', '}', ']', '(', '[', '{', '"', '\'')
-        println("start: $startOffset, offset: ${offset.value}")
         while (offset.value > startOffset){
             if (targets.contains(document.charsSequence[offset.decrementAndGet()]) ) return true
         }
