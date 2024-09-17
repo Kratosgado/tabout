@@ -8,13 +8,18 @@
     <name>Tabout</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="mbeahessilfieprince@gmail.com.com" url="https://github.com/Kratosgado">KgOpinion</vendor>
+    <vendor email="mbeahessilfieprince@gmail.com.com" url="https://github.com/Kratosgado">Kratosgado</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description>
-        Jump in and out of quotes or brackets. Inspired by tabout feature in VScode
+        1. Open plugins marketplace and search Tabout.
+        2. Check and remove higher prioritised Tab and Shift + Tab key-maps.
+
+        ## Usage
+        1. use TAB to jump out of quotes and brackets
+        2. use Shift + TAB to hump in previous quotes and brackets
   </description>
 yy7
     <!-- Product and plugin compatibility requirements.
