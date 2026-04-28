@@ -1,47 +1,61 @@
+import com.github.javaparser.printer.concretesyntaxmodel.CsmElement.token
+
 plugins {
-    id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.9.0"
-    id("org.jetbrains.intellij") version "1.17.4"
+  id("java")
+  id("org.jetbrains.kotlin.jvm") version "2.3.0"
+  id("org.jetbrains.intellij.platform") version "2.11.0"
 }
 
 group = "org.kratosgado"
-version = "1.2"
+version = "1.5"
 
 repositories {
-    mavenCentral()
+  mavenCentral()
+  intellijPlatform {
+    defaultRepositories()
+  }
 }
 
-// Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    version.set("2023.1.5")
-    type.set("IC") // Target IDE Platform
+dependencies {
+    intellijPlatform {
+        // Use the unified helper for 2025.3+ or specific version like "2026.1.1"
+        intellijIdea("2026.1.1")
+        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
+        // Add plugin dependencies if needed, e.g., bundledPlugin("com.intellij.java")
+    }
+}
 
-    plugins.set(listOf(/* Plugin Dependencies */))
+intellijPlatform {
+    pluginConfiguration {
+        // Automatically patches plugin.xml
+        id = "org.kratosgado.tabout"
+        name = "Tabout"
+        ideaVersion {
+            sinceBuild = "252"
+        }
+    }
+
+    signing {
+        // Automatically uses environment variables CERTIFICATE_CHAIN, etc.
+        certificateChain = System.getenv("CERTIFICATE_CHAIN")
+        privateKey = System.getenv("PRIVATE_KEY")
+        password = System.getenv("PRIVATE_KEY_PASSWORD")
+    }
+
+    publishing {
+        token = System.getenv("PUBLISH_TOKEN")
+    }
 }
 
 tasks {
-    // Set the JVM compatibility versions
-    withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
+  // Set the JVM compatibility versions
+  withType<JavaCompile> {
+    sourceCompatibility = "21"
+    targetCompatibility = "21"
+  }
+  withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    compilerOptions {
+      optIn.add("kotlin.RequiresOptIn")
     }
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
-    }
-
-    patchPluginXml {
-        sinceBuild.set("231")
-        untilBuild.set("242.*")
-    }
-
-    signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
-    }
-
-    publishPlugin {
-        token.set(System.getenv("PUBLISH_TOKEN"))
-    }
+  }
 }

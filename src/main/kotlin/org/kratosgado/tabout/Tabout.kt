@@ -11,65 +11,65 @@ import com.intellij.openapi.editor.actionSystem.EditorActionManager
 import org.apache.commons.lang3.mutable.MutableInt
 
 class Tabout : AnAction() {
-    private val targets = charArrayOf(')', '}', ']', '(', '[', '{', '"', '\'', '<', '>')
+  private val targets = charArrayOf(')', '}', ']', '(', '[', '{', '"', '\'', '<', '>')
 
-    override fun actionPerformed(e: AnActionEvent) {
+  override fun actionPerformed(e: AnActionEvent) {
 //        println("Tab triggered")
-        val editor = e.getData(CommonDataKeys.EDITOR)
-        if (editor != null) {
-            val isPopupOpened = LookupManager.getActiveLookup(editor) != null
+    val editor = e.getData(CommonDataKeys.EDITOR)
+    if (editor != null) {
+      val isPopupOpened = LookupManager.getActiveLookup(editor) != null
 
-            val caret = editor.caretModel.currentCaret
-            val document = editor.document
-            val offset = MutableInt(caret.offset)
+      val caret = editor.caretModel.currentCaret
+      val document = editor.document
+      val offset = MutableInt(caret.offset)
 
-            when {
-                isPopupOpened -> {
+      when {
+        isPopupOpened -> {
 //                    println("completion popup is opened")
-                    val actionHandler =
-                        EditorActionManager.getInstance()
-                            .getActionHandler(IdeActions.ACTION_EDITOR_TAB)
-                    WriteCommandAction.runWriteCommandAction(editor.project) {
-                        actionHandler.execute(editor, caret, e.dataContext)
-                    }
-                }
+          val actionHandler =
+            EditorActionManager.getInstance()
+              .getActionHandler(IdeActions.ACTION_EDITOR_TAB)
+          WriteCommandAction.runWriteCommandAction(editor.project) {
+            actionHandler.execute(editor, caret, e.dataContext)
+          }
+        }
 
-                e.inputEvent.isShiftDown && shouldTabIn(document, offset) -> {
+        e.inputEvent?.isShiftDown == true && shouldTabIn(document, offset) -> {
 //                    println("Tabin")
-                    caret.moveToOffset(offset.value)
-                }
+          caret.moveToOffset(offset.value)
+        }
 
-                offset.value < document.textLength && shouldTabout(document, offset) -> {
+        offset.value < document.textLength && shouldTabout(document, offset) -> {
 //                    println("Tabout")
-                    caret.moveToOffset(offset.value)
-                }
+          caret.moveToOffset(offset.value)
+        }
 
-                else -> {
+        else -> {
 //                    println("Passing on")
-                    val actionHandler =
-                        EditorActionManager.getInstance()
-                            .getActionHandler(IdeActions.ACTION_EDITOR_TAB)
-                    WriteCommandAction.runWriteCommandAction(editor.project) {
-                        actionHandler.execute(editor, caret, e.dataContext)
-                    }
-                }
-            }
+          val actionHandler =
+            EditorActionManager.getInstance()
+              .getActionHandler(IdeActions.ACTION_EDITOR_TAB)
+          WriteCommandAction.runWriteCommandAction(editor.project) {
+            actionHandler.execute(editor, caret, e.dataContext)
+          }
         }
+      }
     }
+  }
 
-    private fun shouldTabout(document: Document, offset: MutableInt): Boolean {
-        val endOffset = document.getLineEndOffset(document.getLineNumber(offset.value))
-        while (offset.value < endOffset) {
-            if (targets.contains(document.charsSequence[offset.andIncrement])) return true
-        }
-        return false
+  private fun shouldTabout(document: Document, offset: MutableInt): Boolean {
+    val endOffset = document.getLineEndOffset(document.getLineNumber(offset.value))
+    while (offset.value < endOffset) {
+      if (targets.contains(document.charsSequence[offset.andIncrement])) return true
     }
+    return false
+  }
 
-    private fun shouldTabIn(document: Document, offset: MutableInt): Boolean {
-        val startOffset = document.getLineStartOffset(document.getLineNumber(offset.value))
-        while (offset.value > startOffset) {
-            if (targets.contains(document.charsSequence[offset.decrementAndGet()])) return true
-        }
-        return false
+  private fun shouldTabIn(document: Document, offset: MutableInt): Boolean {
+    val startOffset = document.getLineStartOffset(document.getLineNumber(offset.value))
+    while (offset.value > startOffset) {
+      if (targets.contains(document.charsSequence[offset.decrementAndGet()])) return true
     }
+    return false
+  }
 }

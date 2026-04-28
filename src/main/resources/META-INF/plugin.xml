@@ -14,14 +14,8 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description>
-        1. Open plugins marketplace and search Tabout.
-        2. Check and remove higher prioritised Tab and Shift + Tab key-maps.
-
-        ## Usage
-        1. use TAB to jump out of quotes and brackets
-        2. use Shift + TAB to hump in previous quotes and brackets
+        This plugin allows you to quickly navigate through your code by pressing the Tab key to jump in or out of quotes and brackets.
   </description>
-yy7
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
